@@ -8,9 +8,9 @@ import { CandidateModule } from './candidate/candidate.module';
 
 @Module({
   imports: [
+    CandidateModule,
     GraphQLModule.forRoot({
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-      playground: true,
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -22,7 +22,6 @@ import { CandidateModule } from './candidate/candidate.module';
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
-    CandidateModule,
   ],
   controllers: [AppController],
   providers: [AppService],
