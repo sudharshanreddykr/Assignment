@@ -1,18 +1,16 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { TypeOrmModule } from "@nestjs/typeorm";
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { EmployeeModule } from './employee/employee.module';
-import { ProjectModule } from './project/project.module';
 import { CandidateModule } from './candidate/candidate.module';
 
 @Module({
   imports: [
-    EmployeeModule,
     GraphQLModule.forRoot({
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      playground: true,
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -24,7 +22,6 @@ import { CandidateModule } from './candidate/candidate.module';
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
-    ProjectModule,
     CandidateModule,
   ],
   controllers: [AppController],
