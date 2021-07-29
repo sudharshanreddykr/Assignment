@@ -1,26 +1,49 @@
-import { Injectable } from '@nestjs/common';
+import { Candidate } from './entities/candidate.entity';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCandidateInput } from './dto/create-candidate.input';
 import { UpdateCandidateInput } from './dto/update-candidate.input';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class CandidateService {
-  create(createCandidateInput: CreateCandidateInput) {
-    return 'This action adds a new candidate';
+  constructor(
+    @InjectRepository(Candidate)
+    private candidateRepository: Repository<Candidate>,
+  ) {}
+
+  async create(candidate: CreateCandidateInput) {
+    let candi = this.candidateRepository.create(candidate);
+    return this.candidateRepository.save(candi);
   }
 
-  findAll() {
-    return `This action returns all candidate`;
+  findAll(): Promise<Candidate[]> {
+    return this.candidateRepository.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} candidate`;
+    return this.candidateRepository.findOne(id);
   }
 
-  update(id: number, updateCandidateInput: UpdateCandidateInput) {
-    return `This action updates a #${id} candidate`;
+  async update(id: number, updateCandidate: UpdateCandidateInput) {
+    let candidate = this.candidateRepository.create(updateCandidate);
+    let upd = await this.candidateRepository.update(
+      { id: updateCandidate.id },
+      candidate,
+    );
+    if (upd.affected === 1) {
+      return candidate;
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} candidate`;
+  async delete(id: number) {
+    let employee = this.candidateRepository.findOne(id);
+    if (!employee) {
+      throw new NotFoundException(`Record Not Found`);
+    }
+    let del = await this.candidateRepository.delete(id);
+    if (del.affected === 1) {
+      return del;
+    }
   }
 }

@@ -24,7 +24,7 @@ export class CandidateResolver {
     return this.candidateService.findOne(id);
   }
 
-  @Mutation(() => Candidate)
+  @Mutation(() => Candidate, { name: 'updateCandidate' })
   updateCandidate(
     @Args('updateCandidateInput') updateCandidateInput: UpdateCandidateInput,
   ) {
@@ -36,6 +36,6 @@ export class CandidateResolver {
 
   @Mutation(() => Candidate)
   removeCandidate(@Args('id', { type: () => Int }) id: number) {
-    return this.candidateService.remove(id);
+    return this.candidateService.delete(id);
   }
 }
