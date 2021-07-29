@@ -4,33 +4,34 @@ import { Candidate } from './entities/candidate.entity';
 import { CreateCandidateInput } from './dto/create-candidate.input';
 import { UpdateCandidateInput } from './dto/update-candidate.input';
 import { Logger } from '@nestjs/common';
+import { MessagePattern } from '@nestjs/microservices';
 
 @Resolver(() => Candidate)
 export class CandidateResolver {
   constructor(private readonly candidateService: CandidateService) {}
   private logger = new Logger('AppController');
 
-  @Mutation(() => Candidate)
+  @MessagePattern(() => Candidate)
   createCandidate(
-    @Args('createCandidateInput') createCandidateInput: CreateCandidateInput,
+    createCandidateInput: CreateCandidateInput,
   ) {
     this.logger.log(createCandidateInput); // Log something on every call
     return this.candidateService.create(createCandidateInput);
   }
 
-  @Query(() => [Candidate], { name: 'Allcandidate' })
+  @MessagePattern(() => [Candidate])
   findAll() {
     return this.candidateService.findAll();
   }
 
-  @Query(() => Candidate, { name: 'candidate' })
-  findOne(@Args('id') id: string) {
+  @MessagePattern(() => Candidate)
+  findOne(id: string) {
     return this.candidateService.findOne(id);
   }
 
-  @Mutation(() => Candidate)
+  @MessagePattern(() => Candidate)
   updateCandidate(
-    @Args('updateCandidateInput') updateCandidateInput: UpdateCandidateInput,
+     updateCandidateInput: UpdateCandidateInput,
   ) {
     this.logger.log(updateCandidateInput.id, updateCandidateInput);
     return this.candidateService.update(
@@ -39,8 +40,8 @@ export class CandidateResolver {
     );
   }
 
-  @Mutation(() => Candidate)
-  removeCandidate(@Args('id') id: string) {
+  @MessagePattern(() => Candidate)
+  removeCandidate( id: string) {
     this.logger.log(Candidate);
     return this.candidateService.remove(id);
   }
