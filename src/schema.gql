@@ -1,0 +1,91 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Employee {
+  id: Float!
+  firstName: String!
+  lastName: String!
+  designation: String!
+  city: String
+  project: Project!
+  projectId: Project!
+}
+
+type Project {
+  id: Int!
+  name: String!
+  code: Int!
+  employee: [Employee!]
+}
+
+type Candidate {
+  id: Float!
+  name: String!
+  dob: String!
+  age: Float!
+  email: String!
+}
+
+type Query {
+  AllEmployees: [Employee!]!
+  employee(id: Int!): Employee!
+  projects: [Project!]!
+  project(id: Int!): Project!
+  candidate(id: Int!): Candidate!
+}
+
+type Mutation {
+  createEmployee(employeeInput: EmployeeCreateDto!): Employee!
+  updateEmployee(updateEmployee: UpdateEmployeeInput!): Employee!
+  deleteEmployee(id: Float!): Employee!
+  createProject(createProjectInput: CreateProjectInput!): Project!
+  updateProject(updateProjectInput: UpdateProjectInput!): Project!
+  removeProject(id: Int!): Project!
+  createCandidate(createCandidateInput: CreateCandidateInput!): Candidate!
+  updateCandidate(updateCandidateInput: UpdateCandidateInput!): Candidate!
+  removeCandidate(id: Int!): Candidate!
+}
+
+input EmployeeCreateDto {
+  firstName: String!
+  lastName: String!
+  designation: String!
+  city: String
+  projectId: Float!
+}
+
+input UpdateEmployeeInput {
+  firstName: String
+  lastName: String
+  designation: String
+  city: String
+  projectId: Float
+  id: Int!
+}
+
+input CreateProjectInput {
+  name: String!
+  code: Int!
+}
+
+input UpdateProjectInput {
+  name: String
+  code: Int
+  id: Int!
+}
+
+input CreateCandidateInput {
+  name: String!
+  dob: String!
+  email: String!
+  age: Float!
+}
+
+input UpdateCandidateInput {
+  name: String
+  dob: String
+  email: String
+  age: Float
+  id: Int!
+}
