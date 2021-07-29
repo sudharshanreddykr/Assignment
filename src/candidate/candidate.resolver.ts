@@ -7,24 +7,25 @@ import { UpdateCandidateInput } from './dto/update-candidate.input';
 @Resolver(() => Candidate)
 export class CandidateResolver {
   constructor(private readonly candidateService: CandidateService) {}
-  @Mutation(() => Candidate, { name: 'createCandidate' })
+
+  @Mutation(() => Candidate)
   createCandidate(
     @Args('createCandidateInput') createCandidateInput: CreateCandidateInput,
   ) {
     return this.candidateService.create(createCandidateInput);
   }
 
-  @Query(() => [Candidate], { name: 'candidate' })
+  @Query(() => [Candidate], { name: 'Allcandidate' })
   findAll() {
     return this.candidateService.findAll();
   }
 
   @Query(() => Candidate, { name: 'candidate' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id') id: string) {
     return this.candidateService.findOne(id);
   }
 
-  @Mutation(() => Candidate, { name: 'updateCandidate' })
+  @Mutation(() => Candidate)
   updateCandidate(
     @Args('updateCandidateInput') updateCandidateInput: UpdateCandidateInput,
   ) {
@@ -35,7 +36,7 @@ export class CandidateResolver {
   }
 
   @Mutation(() => Candidate)
-  removeCandidate(@Args('id', { type: () => Int }) id: number) {
-    return this.candidateService.delete(id);
+  removeCandidate(@Args('id') id: string) {
+    return this.candidateService.remove(id);
   }
 }

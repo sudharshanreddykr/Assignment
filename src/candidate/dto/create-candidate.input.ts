@@ -6,11 +6,8 @@ export class CreateCandidateInput {
   name: string;
 
   @Field()
-  dob: string;
+  email: string;
 
   @Field()
-  email: string;
-  
-  @Field()
-  age: number;
+  dateOfBirth: Date;
 }

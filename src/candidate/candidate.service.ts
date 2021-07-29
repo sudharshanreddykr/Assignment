@@ -1,9 +1,11 @@
-import { Candidate } from './entities/candidate.entity';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateCandidateInput } from './dto/create-candidate.input';
 import { UpdateCandidateInput } from './dto/update-candidate.input';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Candidate } from './entities/candidate.entity';
 
 @Injectable()
 export class CandidateService {
@@ -11,39 +13,58 @@ export class CandidateService {
     @InjectRepository(Candidate)
     private candidateRepository: Repository<Candidate>,
   ) {}
+  async create(createCandidateInput: CreateCandidateInput) {
+    const { name, email, dateOfBirth } = createCandidateInput;
+    var year = dateOfBirth.getFullYear();
+    var month = dateOfBirth.getMonth();
+    var day = dateOfBirth.getDate();
+    let today = new Date();
+    var d = today.getFullYear();
+    let age: number = d - year;
+    if (
+      today.getMonth() < month ||
+      (today.getMonth() == month && today.getDate() < day)
+    ) {
+      age--;
+    }
 
-  async create(candidate: CreateCandidateInput) {
-    let candi = this.candidateRepository.create(candidate);
-    return this.candidateRepository.save(candi);
+    return await this.candidateRepository.save({
+      name: name,
+      email: email,
+      dateOfBirth: dateOfBirth,
+      age: age,
+    });
   }
 
-  findAll(): Promise<Candidate[]> {
-    return this.candidateRepository.find();
+  async findAll() {
+    return await this.candidateRepository.find();
   }
 
-  findOne(id: number) {
-    return this.candidateRepository.findOne(id);
+  async findOne(id: string) {
+    return await this.candidateRepository.findOne(id);
   }
 
-  async update(id: number, updateCandidate: UpdateCandidateInput) {
-    let candidate = this.candidateRepository.create(updateCandidate);
-    let upd = await this.candidateRepository.update(
-      { id: updateCandidate.id },
+  async update(id: string, updateCandidateInput: UpdateCandidateInput) {
+    const candidate = await this.candidateRepository.create(
+      updateCandidateInput,
+    );
+    const update = await this.candidateRepository.update(
+      { id: updateCandidateInput.id },
       candidate,
     );
-    if (upd.affected === 1) {
+    if (update.affected === 1) {
       return candidate;
     }
   }
 
-  async delete(id: number) {
-    let employee = this.candidateRepository.findOne(id);
-    if (!employee) {
-      throw new NotFoundException(`Record Not Found`);
+  async remove(id: string) {
+    const candidate = await this.candidateRepository.findOne(id);
+    if (!candidate) {
+      throw new HttpException('Not Found', 404);
     }
-    let del = await this.candidateRepository.delete(id);
+    const del = await this.candidateRepository.delete(id);
     if (del.affected === 1) {
-      return del;
+      return candidate;
     }
   }
 }

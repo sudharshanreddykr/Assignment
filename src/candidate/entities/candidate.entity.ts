@@ -1,18 +1,12 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @ObjectType()
 @Entity()
 export class Candidate {
   @Field()
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Field()
   @Column()
@@ -20,13 +14,13 @@ export class Candidate {
 
   @Field()
   @Column()
-  dob: string;
-
-  @Field()
-  @Column()
-  age: number;
-
-  @Field()
-  @Column()
   email: string;
+
+  @Field()
+  @Column()
+  dateOfBirth: Date;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  age: number;
 }

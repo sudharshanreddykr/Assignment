@@ -3,12 +3,17 @@
 # ------------------------------------------------------
 
 type Candidate {
-  id: Float!
+  id: String!
   name: String!
-  dob: String!
-  age: Float!
   email: String!
+  dateOfBirth: DateTime!
+  age: Float
 }
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 type Project {
   id: Int!
@@ -28,26 +33,25 @@ type Employee {
 }
 
 type Query {
-  candidate(id: Int!): Candidate!
+  Allcandidate: [Candidate!]!
+  candidate(id: String!): Candidate!
 }
 
 type Mutation {
   createCandidate(createCandidateInput: CreateCandidateInput!): Candidate!
   updateCandidate(updateCandidateInput: UpdateCandidateInput!): Candidate!
-  removeCandidate(id: Int!): Candidate!
+  removeCandidate(id: String!): Candidate!
 }
 
 input CreateCandidateInput {
   name: String!
-  dob: String!
   email: String!
-  age: Float!
+  dateOfBirth: DateTime!
 }
 
 input UpdateCandidateInput {
   name: String
-  dob: String
   email: String
-  age: Float
-  id: Int!
+  dateOfBirth: DateTime
+  id: String!
 }
